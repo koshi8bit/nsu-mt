@@ -18,9 +18,9 @@ public class CustomerManager extends ParentManager {
 
     /**
      * Метод создает новый объект класса Customer. Ограничения:
-     * Аргумент 'customer' - не null;
+     * +Аргумент 'customer' - не null;
      * firstName - нет пробелов, длина от 2 до 12 символов включительно, начинается с заглавной буквы, остальные символы строчные, нет цифр и других символов;
-     * lastName - нет пробелов, длина от 2 до 12 символов включительно, начинается с заглавной буквы, остальные символы строчные, нет цифр и других символов;
+     * lastName  - нет пробелов, длина от 2 до 12 символов включительно, начинается с заглавной буквы, остальные символы строчные, нет цифр и других символов;
      * login - указывается в виде email, проверить email на корректность, проверить что нет customer с таким же email;
      * pass - длина от 6 до 12 символов включительно, не должен быть простым (123qwe или 1q2w3e), не должен содержать части login, firstName, lastName
      * balance - должно быть равно 0 перед отправкой базу данных.
@@ -42,10 +42,27 @@ public class CustomerManager extends ParentManager {
             throw new IllegalArgumentException("Password is very easy.");
         }
 
+        isNamesValid(customer.firstName);
+        isNamesValid(customer.lastName);
+
+
         // Лабораторная 2: добавить код который бы проверял, что нет customer'а c таким же login (email'ом).
         // Попробовать добавить другие ограничения, посмотреть как быстро растет кодовая база тестов.
 
         return dbService.createCustomer(customer);
+    }
+
+    private void isNamesValid(String str) //throws IllegalArgumentException
+    {
+        if (str.length() < 2 || str.length() > 12)
+        {
+            throw new IllegalArgumentException("firstName or lastName length should be more or equal 2 symbols and less or equal 12 symbols.");
+        }
+
+        if (!Character.isUpperCase(str.charAt(0)))
+        {
+            throw new IllegalArgumentException("firstName or lastName first letter is not uppercase");
+        }
     }
 
     /**
