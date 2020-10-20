@@ -1,5 +1,6 @@
 package org.nsu.fit.tm_backend.manager;
 
+import com.sun.javafx.scene.web.Debugger;
 import org.slf4j.Logger;
 import org.nsu.fit.tm_backend.database.IDBService;
 import org.nsu.fit.tm_backend.database.data.ContactPojo;
@@ -8,6 +9,7 @@ import org.nsu.fit.tm_backend.database.data.TopUpBalancePojo;
 import org.nsu.fit.tm_backend.manager.auth.data.AuthenticatedUserDetails;
 import org.nsu.fit.tm_backend.shared.Globals;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +21,7 @@ public class CustomerManager extends ParentManager {
     /**
      * Метод создает новый объект класса Customer. Ограничения:
      * +Аргумент 'customer' - не null;
-     * firstName - нет пробелов, длина от 2 до 12 символов включительно, начинается с заглавной буквы, остальные символы строчные, нет цифр и других символов;
+     * firstName - +нет пробелов, +длина от 2 до 12 символов включительно, +начинается с заглавной буквы, +остальные символы строчные, нет цифр и других символов;
      * lastName  - нет пробелов, длина от 2 до 12 символов включительно, начинается с заглавной буквы, остальные символы строчные, нет цифр и других символов;
      * login - указывается в виде email, проверить email на корректность, проверить что нет customer с таким же email;
      * pass - длина от 6 до 12 символов включительно, не должен быть простым (123qwe или 1q2w3e), не должен содержать части login, firstName, lastName
@@ -29,21 +31,16 @@ public class CustomerManager extends ParentManager {
         if (customer == null) {
             throw new IllegalArgumentException("Argument 'customer' is null.");
         }
-
-        if (customer.pass == null) {
-            throw new IllegalArgumentException("Field 'customer.pass' is null.");
-        }
-
-        if (customer.pass.length() < 6 || customer.pass.length() > 12) {
-            throw new IllegalArgumentException("Password's length should be more or equal 6 symbols and less or equal 12 symbols.");
-        }
-
-        if (customer.pass.equalsIgnoreCase("123qwe")) {
-            throw new IllegalArgumentException("Password is very easy.");
-        }
+        System.out.println("---{");
 
         isNamesValid(customer.firstName);
         isNamesValid(customer.lastName);
+
+        isLoginValid(customer.login);
+
+        isPassValid(customer.pass);
+        System.out.println("---}");
+
 
 
         // Лабораторная 2: добавить код который бы проверял, что нет customer'а c таким же login (email'ом).
@@ -52,17 +49,72 @@ public class CustomerManager extends ParentManager {
         return dbService.createCustomer(customer);
     }
 
-    private void isNamesValid(String str) //throws IllegalArgumentException
+    private void isNamesValid(String name) //throws IllegalArgumentException
     {
-        if (str.length() < 2 || str.length() > 12)
-        {
-            throw new IllegalArgumentException("firstName or lastName length should be more or equal 2 symbols and less or equal 12 symbols.");
+        System.out.println(name);
+        if (name == null) {
+            throw new IllegalArgumentException("Field 'customer.firstName' or 'customer.lastName' is null");
         }
 
-        if (!Character.isUpperCase(str.charAt(0)))
+        if (name.contains(" "))
+        {
+            throw new IllegalArgumentException("firstName or lastName contains <space>");
+        }
+
+        if (name.length() < 2 || name.length() > 12)
+        {
+            throw new IllegalArgumentException("firstName or lastName length should be more or equal 2 symbols and less or equal 12 symbols");
+        }
+
+        if (!Character.isUpperCase(name.charAt(0)))
         {
             throw new IllegalArgumentException("firstName or lastName first letter is not uppercase");
         }
+
+        String shortString = name.substring(1);
+
+        if (!shortString.equals(shortString.toLowerCase()))
+        {
+            throw new IllegalArgumentException("firstName or lastName have upper case after first symbol");
+        }
+
+        String invalidSymbols = "1234567890!@#$";
+        char[] invalidSymbolsArr = invalidSymbols.toCharArray();
+        System.out.println(invalidSymbolsArr);
+
+
+    }
+
+    private void isLoginValid(String login)
+    {
+        if (login == null) {
+            throw new IllegalArgumentException("Field 'customer.login' is null.");
+        }
+
+        if (login.isEmpty()) {
+            throw new IllegalArgumentException("Field 'customer.login' is empty.");
+        }
+
+    }
+
+    private void isPassValid(String pass)
+    {
+        if (pass == null) {
+            throw new IllegalArgumentException("Field 'customer.pass' is null.");
+        }
+
+        if (pass.length() < 6 || pass.length() > 12) {
+            throw new IllegalArgumentException("Password's length should be more or equal 6 symbols and less or equal 12 symbols.");
+        }
+
+        ArrayList<String> easyPass = new ArrayList<>();
+        System.out.println(easyPass);
+
+
+        if (pass.equalsIgnoreCase("123qwe")) {
+            throw new IllegalArgumentException("Password is very easy.");
+        }
+
     }
 
     /**

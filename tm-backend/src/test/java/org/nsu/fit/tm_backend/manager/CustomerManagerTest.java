@@ -66,6 +66,13 @@ class CustomerManagerTest {
         verify(dbService, times(0)).getCustomers();
     }
 
+    @Test
+    void testCreateCustomerWithNullArgument_Right() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                customerManager.createCustomer(null));
+        assertEquals("Argument 'customer' is null.", exception.getMessage());
+    }
+
     // Как не надо писать тест...
     @Test
     void testCreateCustomerWithNullArgument_Wrong() {
@@ -76,15 +83,91 @@ class CustomerManagerTest {
         }
     }
 
+
+    /// firstName / lastName {
     @Test
-    void testCreateCustomerWithNullArgument_Right() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                customerManager.createCustomer(null));
-        assertEquals("Argument 'customer' is null.", exception.getMessage());
+    void testCreateCustomerNameIsNull() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        //createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "ig2i2gd";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Field 'customer.firstName' or 'customer.lastName' is null", exception.getMessage());
     }
 
     @Test
-    void testCreateCustomerWithShortPassword() {
+    void testCreateCustomerNameFirstLowerLetter() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "john";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "ig2i2gd";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("firstName or lastName first letter is not uppercase", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerNameLenLess02() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "J";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "123qwe7";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("firstName or lastName length should be more or equal 2 symbols and less or equal 12 symbols", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerNameLenMore12() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "Jooooooooooooooooooooooooon";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "123qwe7";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("firstName or lastName length should be more or equal 2 symbols and less or equal 12 symbols", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerNameSpaceExists() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "J ohn";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "123qwe7";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("firstName or lastName contains <space>", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerNameUpperCaseInTheMiddle() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "JoHn";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "123qwe7";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("firstName or lastName have upper case after first symbol", exception.getMessage());
+    }
+    /// firstName / lastName }
+
+
+    /// login {
+    @Test
+    void testCreateCustomerLoginIsNull() {
         createCustomerInput = new CustomerPojo();
         createCustomerInput.firstName = "John";
         createCustomerInput.lastName = "Wick";
@@ -95,4 +178,66 @@ class CustomerManagerTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
         assertEquals("Password is very easy.", exception.getMessage());
     }
+    /// login }
+
+    /// pass {
+    @Test
+    void testCreateCustomerPasswordIsNull() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        //createCustomerInput.pass = "123qwe";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Field 'customer.pass' is null.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerPassLenLess06() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "123qw";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Password's length should be more or equal 6 symbols and less or equal 12 symbols.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerPassLenMore12() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "1234567890123";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Password's length should be more or equal 6 symbols and less or equal 12 symbols.", exception.getMessage());
+    }
+
+
+    @Test
+    void testCreateCustomerPasswordIsEsay() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "123qwe";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Password is very easy.", exception.getMessage());
+    }
+
+    /// pass }
+
+    /// balance {
+    /// balance }
+
+
 }
