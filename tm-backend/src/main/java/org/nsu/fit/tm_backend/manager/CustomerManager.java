@@ -27,7 +27,7 @@ public class CustomerManager extends ParentManager {
      * +lastName  - нет пробелов, длина от 2 до 12 символов включительно, начинается с заглавной буквы, остальные символы строчные, нет цифр и других символов;
      * login - указывается в виде email, проверить email на корректность, проверить что нет customer с таким же email;
      * +pass - длина от 6 до 12 символов включительно, не должен быть простым (123qwe или 1q2w3e), не должен содержать части login, firstName, lastName
-     * balance - должно быть равно 0 перед отправкой базу данных.
+     * +balance - должно быть равно 0 перед отправкой базу данных.
      */
     public CustomerPojo createCustomer(CustomerPojo customer) {
         if (customer == null) {
@@ -42,6 +42,11 @@ public class CustomerManager extends ParentManager {
 
         isPassValid(customer);
         //System.out.println("---}");
+
+        if(customer.balance != 0)
+        {
+            throw new IllegalArgumentException("Balance is not zero.");
+        }
 
 
 

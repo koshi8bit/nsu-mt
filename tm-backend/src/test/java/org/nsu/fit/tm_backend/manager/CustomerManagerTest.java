@@ -349,6 +349,18 @@ class CustomerManagerTest {
     /// pass }
 
     /// balance {
+    @Test
+    void testCreateCustomerBalanceIsNotZero() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "wrgwg22qdf";
+        createCustomerInput.balance = 3;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Balance is not zero.", exception.getMessage());
+    }
     /// balance }
 
 
