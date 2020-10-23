@@ -23,25 +23,25 @@ public class CustomerManager extends ParentManager {
     /**
      * Метод создает новый объект класса Customer. Ограничения:
      * +Аргумент 'customer' - не null;
-     * firstName - +нет пробелов, +длина от 2 до 12 символов включительно, +начинается с заглавной буквы, +остальные символы строчные, нет цифр и других символов;
-     * lastName  - нет пробелов, длина от 2 до 12 символов включительно, начинается с заглавной буквы, остальные символы строчные, нет цифр и других символов;
+     * +firstName - нет пробелов, длина от 2 до 12 символов включительно, начинается с заглавной буквы, остальные символы строчные, нет цифр и других символов;
+     * +lastName  - нет пробелов, длина от 2 до 12 символов включительно, начинается с заглавной буквы, остальные символы строчные, нет цифр и других символов;
      * login - указывается в виде email, проверить email на корректность, проверить что нет customer с таким же email;
-     * pass - длина от 6 до 12 символов включительно, не должен быть простым (123qwe или 1q2w3e), не должен содержать части login, firstName, lastName
+     * +pass - длина от 6 до 12 символов включительно, не должен быть простым (123qwe или 1q2w3e), не должен содержать части login, firstName, lastName
      * balance - должно быть равно 0 перед отправкой базу данных.
      */
     public CustomerPojo createCustomer(CustomerPojo customer) {
         if (customer == null) {
             throw new IllegalArgumentException("Argument 'customer' is null.");
         }
-        System.out.println("---{");
+        //System.out.println("---{");
 
         isNamesValid(customer.firstName);
         isNamesValid(customer.lastName);
 
         isLoginValid(customer.login);
 
-        isPassValid(customer.pass);
-        System.out.println("---}");
+        isPassValid(customer);
+        //System.out.println("---}");
 
 
 
@@ -51,10 +51,10 @@ public class CustomerManager extends ParentManager {
         return dbService.createCustomer(customer);
     }
 
-    //firstName - +нет пробелов, +длина от 2 до 12 символов включительно, +начинается с заглавной буквы, +остальные символы строчные, нет цифр и других символов;
+    //+firstName - +нет пробелов, +длина от 2 до 12 символов включительно, +начинается с заглавной буквы, +остальные символы строчные, +нет цифр и других символов;
     private void isNamesValid(String name) //throws IllegalArgumentException
     {
-        System.out.println(name);
+        //System.out.println(name);
         if (name == null) {
             throw new IllegalArgumentException("Field 'customer.firstName' or 'customer.lastName' is null");
         }
@@ -81,17 +81,24 @@ public class CustomerManager extends ParentManager {
             throw new IllegalArgumentException("firstName or lastName have upper case after first symbol");
         }
 
-        String invalidSymbols = "1234567890!@#$";
-        System.out.println(name.chars()
-                .mapToObj(x -> Character.isUpperCase(x))
-                .collect(Collectors.toList()));
-
-//        System.out.println(invalidSymbolsArr);
-
-
-
+        if (!isNameValidLettersOnly(name))
+        {
+            throw new IllegalArgumentException("firstName or lastName have not valid letters.");
+        }
     }
-    //login - указывается в виде email, проверить email на корректность, проверить что нет customer с таким же email;
+
+    private boolean isNameValidLettersOnly(String name)
+    {
+        return name.matches("[a-zA-Z]+");
+//        return name.matches ("[[:alpha:]]+");
+//
+//        String invalidSymbols = "1234567890!@#$";
+//        return !name.chars()
+//                .mapToObj(x -> ((char) x))
+//                .anyMatch(x -> invalidSymbols.contains("" + x));
+    }
+
+    //login - +указывается в виде email, +проверить email на корректность, проверить что нет customer с таким же email;
     private void isLoginValid(String login)
     {
         if (login == null) {
@@ -102,11 +109,23 @@ public class CustomerManager extends ParentManager {
             throw new IllegalArgumentException("Field 'customer.login' is empty.");
         }
 
+        if (!login.matches("^((?!\\.)[\\w-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$"))
+        {
+            throw new IllegalArgumentException("Invalid email.");
+        }
+
+//        if (lookupCustomer(login) == null)
+//        {
+//            throw new IllegalArgumentException("User with same login is already exists.");
+//        }
+
+
     }
 
-    //pass - длина от 6 до 12 символов включительно, не должен быть простым (123qwe или 1q2w3e), не должен содержать части login, firstName, lastName
-    private void isPassValid(String pass)
+    //+pass - +длина от 6 до 12 символов включительно, +не должен быть простым (123qwe или 1q2w3e), +не должен содержать части login, firstName, lastName
+    private void isPassValid(CustomerPojo customer)
     {
+        String pass = customer.pass;
         if (pass == null) {
             throw new IllegalArgumentException("Field 'customer.pass' is null.");
         }
@@ -118,13 +137,27 @@ public class CustomerManager extends ParentManager {
         ArrayList<String> easyPass = new ArrayList<>();
         easyPass.add("123qwe");
         easyPass.add("1q2w3e");
-        System.out.println(easyPass);
 
+        boolean isSimple = easyPass.stream()
+                .anyMatch(x -> x.contains(pass.toLowerCase()));
 
-        if (pass.equalsIgnoreCase("123qwe")) {
+        if (isSimple) {
             throw new IllegalArgumentException("Password is very easy.");
         }
 
+        isPassValidContains(pass, customer.login);
+        isPassValidContains(pass, customer.firstName);
+        isPassValidContains(pass, customer.lastName);
+
+
+    }
+
+    private void isPassValidContains(String pass, String ect)
+    {
+        if (pass.toLowerCase().contains(ect.toLowerCase()))
+        {
+            throw new IllegalArgumentException("Password contains in firstName or lastName or login.");
+        }
     }
 
     /**

@@ -162,6 +162,20 @@ class CustomerManagerTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
         assertEquals("firstName or lastName have upper case after first symbol", exception.getMessage());
     }
+
+    @Test
+    void testCreateCustomerNameContainsInvalidLetter() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick!";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "123qwe7";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("firstName or lastName have not valid letters.", exception.getMessage());
+    }
+
     /// firstName / lastName }
 
 
@@ -171,12 +185,58 @@ class CustomerManagerTest {
         createCustomerInput = new CustomerPojo();
         createCustomerInput.firstName = "John";
         createCustomerInput.lastName = "Wick";
-        createCustomerInput.login = "john_wick@gmail.com";
-        createCustomerInput.pass = "123qwe";
+        //createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "123qwe7";
         createCustomerInput.balance = 0;
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
-        assertEquals("Password is very easy.", exception.getMessage());
+        assertEquals("Field 'customer.login' is null.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerLoginIsEmpty() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "";
+        createCustomerInput.pass = "123qwe7";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Field 'customer.login' is empty.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerLoginIsInvalid() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john@wick@mail.ru";
+        createCustomerInput.pass = "123qwe7";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Invalid email.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerLoginSameLogin() {
+//        createCustomerInput = new CustomerPojo();
+//        createCustomerInput.firstName = "John";
+//        createCustomerInput.lastName = "Wick";
+//        createCustomerInput.login = "john_wick@gmail.com";
+//        createCustomerInput.pass = "123qwe7";
+//        createCustomerInput.balance = 0;
+//
+//        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+//        assertEquals("Invalid email.", exception.getMessage());
+//
+//        createCustomerInput = new CustomerPojo();
+//        createCustomerInput.firstName = "John2";
+//        createCustomerInput.lastName = "Wick2";
+//        createCustomerInput.login = "john_wick@gmail.com";
+//        createCustomerInput.pass = "123qwe72";
+//        createCustomerInput.balance = 0;
     }
     /// login }
 
@@ -222,7 +282,7 @@ class CustomerManagerTest {
 
 
     @Test
-    void testCreateCustomerPasswordIsEsay() {
+    void testCreateCustomerPasswordIsEasyA() {
         createCustomerInput = new CustomerPojo();
         createCustomerInput.firstName = "John";
         createCustomerInput.lastName = "Wick";
@@ -232,6 +292,58 @@ class CustomerManagerTest {
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
         assertEquals("Password is very easy.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerPasswordIsEasyB() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "1q2w3e";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Password is very easy.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerPasswordContainsInFirstName() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "john12";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Password contains in firstName or lastName or login.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerPasswordContainsInLastName() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "7wickk";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Password contains in firstName or lastName or login.", exception.getMessage());
+    }
+
+    @Test
+    void testCreateCustomerPasswordContainsInLogin() {
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "1wick@Gmail2";
+        createCustomerInput.balance = 0;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Password contains in firstName or lastName or login.", exception.getMessage());
     }
 
     /// pass }
