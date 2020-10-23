@@ -142,9 +142,10 @@ public class CustomerManager extends ParentManager {
         ArrayList<String> easyPass = new ArrayList<>();
         easyPass.add("123qwe");
         easyPass.add("1q2w3e");
+        //easyPass.add("...");
 
         boolean isSimple = easyPass.stream()
-                .anyMatch(x -> x.contains(pass.toLowerCase()));
+                .anyMatch(x -> x.toLowerCase().contains(pass.toLowerCase()));
 
         if (isSimple) {
             throw new IllegalArgumentException("Password is very easy.");
