@@ -10,8 +10,10 @@ import org.nsu.fit.tm_backend.manager.auth.data.AuthenticatedUserDetails;
 import org.nsu.fit.tm_backend.shared.Globals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CustomerManager extends ParentManager {
     public CustomerManager(IDBService dbService, Logger flowLog) {
@@ -49,6 +51,7 @@ public class CustomerManager extends ParentManager {
         return dbService.createCustomer(customer);
     }
 
+    //firstName - +нет пробелов, +длина от 2 до 12 символов включительно, +начинается с заглавной буквы, +остальные символы строчные, нет цифр и других символов;
     private void isNamesValid(String name) //throws IllegalArgumentException
     {
         System.out.println(name);
@@ -79,12 +82,16 @@ public class CustomerManager extends ParentManager {
         }
 
         String invalidSymbols = "1234567890!@#$";
-        char[] invalidSymbolsArr = invalidSymbols.toCharArray();
-        System.out.println(invalidSymbolsArr);
+        System.out.println(name.chars()
+                .mapToObj(x -> Character.isUpperCase(x))
+                .collect(Collectors.toList()));
+
+//        System.out.println(invalidSymbolsArr);
+
 
 
     }
-
+    //login - указывается в виде email, проверить email на корректность, проверить что нет customer с таким же email;
     private void isLoginValid(String login)
     {
         if (login == null) {
@@ -97,6 +104,7 @@ public class CustomerManager extends ParentManager {
 
     }
 
+    //pass - длина от 6 до 12 символов включительно, не должен быть простым (123qwe или 1q2w3e), не должен содержать части login, firstName, lastName
     private void isPassValid(String pass)
     {
         if (pass == null) {
@@ -108,6 +116,8 @@ public class CustomerManager extends ParentManager {
         }
 
         ArrayList<String> easyPass = new ArrayList<>();
+        easyPass.add("123qwe");
+        easyPass.add("1q2w3e");
         System.out.println(easyPass);
 
 
