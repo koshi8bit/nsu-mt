@@ -10,9 +10,11 @@ import org.slf4j.Logger;
 import org.nsu.fit.tm_backend.database.IDBService;
 import org.nsu.fit.tm_backend.database.data.CustomerPojo;
 
+import java.util.LinkedList;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 // Лабораторная 2: покрыть юнит тестами класс CustomerManager на 100%.
 class CustomerManagerTest {
@@ -63,7 +65,7 @@ class CustomerManagerTest {
         verify(dbService, times(1)).createCustomer(createCustomerInput);
 
         // Проверяем, что другие методы не вызывались...
-        verify(dbService, times(0)).getCustomers();
+        verify(dbService, times(1)).getCustomers();
     }
 
     @Test
@@ -221,22 +223,40 @@ class CustomerManagerTest {
 
     @Test
     void testCreateCustomerLoginSameLogin() {
-//        createCustomerInput = new CustomerPojo();
-//        createCustomerInput.firstName = "John";
-//        createCustomerInput.lastName = "Wick";
-//        createCustomerInput.login = "john_wick@gmail.com";
-//        createCustomerInput.pass = "123qwe7";
-//        createCustomerInput.balance = 0;
-//
-//        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
-//        assertEquals("Invalid email.", exception.getMessage());
-//
-//        createCustomerInput = new CustomerPojo();
-//        createCustomerInput.firstName = "John2";
-//        createCustomerInput.lastName = "Wick2";
-//        createCustomerInput.login = "john_wick@gmail.com";
-//        createCustomerInput.pass = "123qwe72";
-//        createCustomerInput.balance = 0;
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "123qwe7";
+        createCustomerInput.balance = 0;
+
+
+        CustomerPojo createCustomerOutput1 = new CustomerPojo();
+        createCustomerOutput1.id = UUID.randomUUID();
+        createCustomerOutput1.firstName = "John";
+        createCustomerOutput1.lastName = "Wick";
+        createCustomerOutput1.login = "john_wick@gmail.com";
+        createCustomerOutput1.pass = "Baba_Jaga";
+        createCustomerOutput1.balance = 0;
+
+        CustomerPojo createCustomerOutput2 = new CustomerPojo();
+        createCustomerOutput2.id = UUID.randomUUID();
+        createCustomerOutput2.firstName = "John2";
+        createCustomerOutput2.lastName = "Wick2";
+        createCustomerOutput2.login = "john_wick@gmail.com";
+        createCustomerOutput2.pass = "Baba_Jaga2";
+        createCustomerOutput2.balance = 0;
+
+        LinkedList<CustomerPojo> list = new LinkedList<>();
+        list.add(createCustomerOutput1);
+        list.add(createCustomerOutput2);
+
+        when(dbService.getCustomers()).thenReturn(list);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.createCustomer(createCustomerInput));
+        assertEquals("Customer with same login is already exists.", exception.getMessage());
+
+        verify(dbService, times(0)).createCustomer(createCustomerInput);
     }
     /// login }
 
@@ -364,4 +384,61 @@ class CustomerManagerTest {
     /// balance }
 
 
+    /// etc {
+    @Test
+    void testCreateCustomerEtcGetCustomers()
+    {
+//        createCustomerInput = new CustomerPojo();
+//        createCustomerInput.firstName = "John";
+//        createCustomerInput.lastName = "Wick";
+//        createCustomerInput.login = "john_wick@gmail.com";
+//        createCustomerInput.pass = "123qwe7";
+//        createCustomerInput.balance = 0;
+//
+//
+//        CustomerPojo createCustomerOutput1 = new CustomerPojo();
+//        createCustomerOutput1.id = UUID.randomUUID();
+//        createCustomerOutput1.firstName = "John";
+//        createCustomerOutput1.lastName = "Wick";
+//        createCustomerOutput1.login = "john_wick@gmail.com";
+//        createCustomerOutput1.pass = "Baba_Jaga";
+//        createCustomerOutput1.balance = 0;
+//
+//        CustomerPojo createCustomerOutput2 = new CustomerPojo();
+//        createCustomerOutput2.id = UUID.randomUUID();
+//        createCustomerOutput2.firstName = "John2";
+//        createCustomerOutput2.lastName = "Wick2";
+//        createCustomerOutput2.login = "john_wick@gmail.com";
+//        createCustomerOutput2.pass = "Baba_Jaga2";
+//        createCustomerOutput2.balance = 0;
+//
+//        LinkedList<CustomerPojo> list = new LinkedList<>();
+//        list.add(createCustomerOutput1);
+//        list.add(createCustomerOutput2);
+//
+//        when(dbService.getCustomers()).thenReturn(list);
+//        ////////
+//
+//        // Вызываем метод, который хотим протестировать
+//        CustomerPojo customer = customerManager.createCustomer(createCustomerInput);
+//
+//        // Проверяем результат выполенния метода
+//        assertEquals(customer.id, createCustomerOutput.id);
+//
+//        // Проверяем, что метод по созданию Customer был вызван ровно 1 раз с определенными аргументами
+//        verify(dbService, times(1)).createCustomer(createCustomerInput);
+//
+//        // Проверяем, что другие методы не вызывались...
+//        verify(dbService, times(1)).getCustomers();
+
+    }
+
+    @Test
+    void testCreateCustomerEtcLookupCustomer()
+    {
+        
+    }
+    /// etc }
 }
+
+

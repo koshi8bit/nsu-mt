@@ -41,14 +41,19 @@ public class CustomerManager extends ParentManager {
         isLoginValid(customer.login);
 
         isPassValid(customer);
-        //System.out.println("---}");
+
 
         if(customer.balance != 0)
         {
             throw new IllegalArgumentException("Balance is not zero.");
         }
 
+        if(lookupCustomer(customer.login) != null)
+        {
+            throw new IllegalArgumentException("Customer with same login is already exists.");
+        }
 
+        //System.out.println("---}");
 
         // Лабораторная 2: добавить код который бы проверял, что нет customer'а c таким же login (email'ом).
         // Попробовать добавить другие ограничения, посмотреть как быстро растет кодовая база тестов.
