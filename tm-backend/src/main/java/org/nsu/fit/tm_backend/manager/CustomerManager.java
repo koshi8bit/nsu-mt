@@ -214,6 +214,16 @@ public class CustomerManager extends ParentManager {
     public CustomerPojo topUpBalance(TopUpBalancePojo topUpBalancePojo) {
         CustomerPojo customerPojo = dbService.getCustomer(topUpBalancePojo.customerId);
 
+        if (customerPojo == null)
+        {
+            throw new IllegalArgumentException("Customer not found.");
+        }
+
+        if (topUpBalancePojo.money <= 0)
+        {
+            throw new IllegalArgumentException("Addition is less than zero.");
+        }
+
         customerPojo.balance += topUpBalancePojo.money;
 
         dbService.editCustomer(customerPojo);

@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.nsu.fit.tm_backend.database.data.TopUpBalancePojo;
 import org.slf4j.Logger;
 import org.nsu.fit.tm_backend.database.IDBService;
 import org.nsu.fit.tm_backend.database.data.CustomerPojo;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
@@ -388,62 +390,66 @@ class CustomerManagerTest {
     @Test
     void testCreateCustomerEtcGetCustomers()
     {
-//        createCustomerInput = new CustomerPojo();
-//        createCustomerInput.firstName = "John";
-//        createCustomerInput.lastName = "Wick";
-//        createCustomerInput.login = "john_wick@gmail.com";
-//        createCustomerInput.pass = "123qwe7";
-//        createCustomerInput.balance = 0;
-//
-//
-//        CustomerPojo createCustomerOutput1 = new CustomerPojo();
-//        createCustomerOutput1.id = UUID.randomUUID();
-//        createCustomerOutput1.firstName = "John";
-//        createCustomerOutput1.lastName = "Wick";
-//        createCustomerOutput1.login = "john_wick@gmail.com";
-//        createCustomerOutput1.pass = "Baba_Jaga";
-//        createCustomerOutput1.balance = 0;
-//
-//        CustomerPojo createCustomerOutput2 = new CustomerPojo();
-//        createCustomerOutput2.id = UUID.randomUUID();
-//        createCustomerOutput2.firstName = "John2";
-//        createCustomerOutput2.lastName = "Wick2";
-//        createCustomerOutput2.login = "john_wick@gmail.com";
-//        createCustomerOutput2.pass = "Baba_Jaga2";
-//        createCustomerOutput2.balance = 0;
-//
-//        LinkedList<CustomerPojo> list = new LinkedList<>();
-//        list.add(createCustomerOutput1);
-//        list.add(createCustomerOutput2);
-//
-//        when(dbService.getCustomers()).thenReturn(list);
-//        ////////
-//
-//        // Вызываем метод, который хотим протестировать
-//        CustomerPojo customer = customerManager.createCustomer(createCustomerInput);
-//
-//        // Проверяем результат выполенния метода
-//        assertEquals(customer.id, createCustomerOutput.id);
-//
-//        // Проверяем, что метод по созданию Customer был вызван ровно 1 раз с определенными аргументами
-//        verify(dbService, times(1)).createCustomer(createCustomerInput);
-//
-//        // Проверяем, что другие методы не вызывались...
-//        verify(dbService, times(1)).getCustomers();
+        CustomerPojo createCustomerOutput1 = new CustomerPojo();
+        createCustomerOutput1.id = UUID.randomUUID();
+        createCustomerOutput1.firstName = "John";
+        createCustomerOutput1.lastName = "Wick1";
+        createCustomerOutput1.login = "john_wick1@gmail.com";
+        createCustomerOutput1.pass = "Baba_Jaga";
+        createCustomerOutput1.balance = 0;
 
+        CustomerPojo createCustomerOutput2 = new CustomerPojo();
+        createCustomerOutput2.id = UUID.randomUUID();
+        createCustomerOutput2.firstName = "John2";
+        createCustomerOutput2.lastName = "Wick2";
+        createCustomerOutput2.login = "john_wick2@gmail.com";
+        createCustomerOutput2.pass = "Baba_Jaga2";
+        createCustomerOutput2.balance = 0;
+
+        LinkedList<CustomerPojo> list = new LinkedList<>();
+        list.add(createCustomerOutput1);
+        list.add(createCustomerOutput2);
+
+        when(dbService.getCustomers()).thenReturn(list);
+
+        List<CustomerPojo> customers = customerManager.getCustomers();
+        assertEquals("Wick1", customers.get(0).lastName);
+        assertEquals("Wick2", customers.get(1).lastName);
+    }
+
+    @Test
+    void testCreateCustomerEtcGetCustomer()
+    {
+        CustomerPojo createCustomerOutput1 = new CustomerPojo();
+        createCustomerOutput1.id = UUID.randomUUID();
+        createCustomerOutput1.firstName = "John";
+        createCustomerOutput1.lastName = "Wick1";
+        createCustomerOutput1.login = "john_wick1@gmail.com";
+        createCustomerOutput1.pass = "Baba_Jaga";
+        createCustomerOutput1.balance = 0;
+
+        CustomerPojo createCustomerOutput2 = new CustomerPojo();
+        createCustomerOutput2.id = UUID.randomUUID();
+        createCustomerOutput2.firstName = "John2";
+        createCustomerOutput2.lastName = "Wick2";
+        createCustomerOutput2.login = "john_wick2@gmail.com";
+        createCustomerOutput2.pass = "Baba_Jaga2";
+        createCustomerOutput2.balance = 0;
+
+        LinkedList<CustomerPojo> list = new LinkedList<>();
+        list.add(createCustomerOutput1);
+        list.add(createCustomerOutput2);
+
+        when(dbService.getCustomers()).thenReturn(list);
+
+        List<CustomerPojo> customers = customerManager.getCustomers();
+        assertEquals("Wick1", customers.get(0).lastName);
+        assertEquals("Wick2", customers.get(1).lastName);
     }
 
     @Test
     void testCreateCustomerEtcLookupCustomer()
     {
-        createCustomerInput = new CustomerPojo();
-        createCustomerInput.firstName = "John";
-        createCustomerInput.lastName = "Wick";
-        createCustomerInput.login = "john_wick@gmail.com";
-        createCustomerInput.pass = "123qwe7";
-        createCustomerInput.balance = 0;
-
-
         CustomerPojo createCustomerOutput1 = new CustomerPojo();
         createCustomerOutput1.id = UUID.randomUUID();
         createCustomerOutput1.firstName = "John";
@@ -469,6 +475,31 @@ class CustomerManagerTest {
         CustomerPojo customer = customerManager.lookupCustomer("john_wick2@gmail.com");
         assertEquals("Wick2", customer.lastName);
     }
+
+
+    @Test
+    void testCreateCustomerEtcToUpBalanceOk()
+    {
+        CustomerPojo createCustomerOutput1 = new CustomerPojo();
+        createCustomerOutput1.id = UUID.randomUUID();
+        createCustomerOutput1.firstName = "John";
+        createCustomerOutput1.lastName = "Wick1";
+        createCustomerOutput1.login = "john_wick1@gmail.com";
+        createCustomerOutput1.pass = "Baba_Jaga";
+        createCustomerOutput1.balance = 0;
+
+        when(dbService.getCustomer(createCustomerOutput1.id)).thenReturn(createCustomerOutput1);
+
+        TopUpBalancePojo topUpBalancePojoInput = new TopUpBalancePojo();
+        topUpBalancePojoInput.customerId = createCustomerOutput1.id;
+        topUpBalancePojoInput.money = 20; // do -20 too
+
+        CustomerPojo customer = customerManager.topUpBalance(topUpBalancePojoInput);
+
+        assertEquals(20, customer.balance);
+    }
+
+
     /// etc }
 }
 
