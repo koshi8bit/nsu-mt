@@ -500,6 +500,50 @@ class CustomerManagerTest {
     }
 
 
+    @Test
+    void testCreateCustomerEtcToUpBalanceMinus20()
+    {
+        CustomerPojo createCustomerOutput1 = new CustomerPojo();
+        createCustomerOutput1.id = UUID.randomUUID();
+        createCustomerOutput1.firstName = "John";
+        createCustomerOutput1.lastName = "Wick1";
+        createCustomerOutput1.login = "john_wick1@gmail.com";
+        createCustomerOutput1.pass = "Baba_Jaga";
+        createCustomerOutput1.balance = 0;
+
+        when(dbService.getCustomer(createCustomerOutput1.id)).thenReturn(createCustomerOutput1);
+
+        TopUpBalancePojo topUpBalancePojoInput = new TopUpBalancePojo();
+        topUpBalancePojoInput.customerId = createCustomerOutput1.id;
+        topUpBalancePojoInput.money = -20;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.topUpBalance(topUpBalancePojoInput));
+        assertEquals("Addition is less than zero.", exception.getMessage());
+    }
+
+
+    @Test
+    void testCreateCustomerEtcToUpBalanceCustomerNotFound()
+    {
+        CustomerPojo createCustomerOutput1 = new CustomerPojo();
+        createCustomerOutput1.id = UUID.randomUUID();
+        createCustomerOutput1.firstName = "John";
+        createCustomerOutput1.lastName = "Wick1";
+        createCustomerOutput1.login = "john_wick1@gmail.com";
+        createCustomerOutput1.pass = "Baba_Jaga";
+        createCustomerOutput1.balance = 0;
+
+        when(dbService.getCustomer(createCustomerOutput1.id)).thenReturn(createCustomerOutput1);
+
+        TopUpBalancePojo topUpBalancePojoInput = new TopUpBalancePojo();
+        topUpBalancePojoInput.customerId = UUID.randomUUID();
+        topUpBalancePojoInput.money = 20;
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> customerManager.topUpBalance(topUpBalancePojoInput));
+        assertEquals("Customer not found.", exception.getMessage());
+    }
+
+
     /// etc }
 }
 
