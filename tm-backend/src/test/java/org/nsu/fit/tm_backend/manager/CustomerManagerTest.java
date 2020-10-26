@@ -436,7 +436,38 @@ class CustomerManagerTest {
     @Test
     void testCreateCustomerEtcLookupCustomer()
     {
-        
+        createCustomerInput = new CustomerPojo();
+        createCustomerInput.firstName = "John";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "123qwe7";
+        createCustomerInput.balance = 0;
+
+
+        CustomerPojo createCustomerOutput1 = new CustomerPojo();
+        createCustomerOutput1.id = UUID.randomUUID();
+        createCustomerOutput1.firstName = "John";
+        createCustomerOutput1.lastName = "Wick";
+        createCustomerOutput1.login = "john_wick1@gmail.com";
+        createCustomerOutput1.pass = "Baba_Jaga";
+        createCustomerOutput1.balance = 0;
+
+        CustomerPojo createCustomerOutput2 = new CustomerPojo();
+        createCustomerOutput2.id = UUID.randomUUID();
+        createCustomerOutput2.firstName = "John2";
+        createCustomerOutput2.lastName = "Wick2";
+        createCustomerOutput2.login = "john_wick2@gmail.com";
+        createCustomerOutput2.pass = "Baba_Jaga2";
+        createCustomerOutput2.balance = 0;
+
+        LinkedList<CustomerPojo> list = new LinkedList<>();
+        list.add(createCustomerOutput1);
+        list.add(createCustomerOutput2);
+
+        when(dbService.getCustomers()).thenReturn(list);
+
+        CustomerPojo customer = customerManager.lookupCustomer("john_wick2@gmail.com");
+        assertEquals("Wick2", customer.lastName);
     }
     /// etc }
 }
