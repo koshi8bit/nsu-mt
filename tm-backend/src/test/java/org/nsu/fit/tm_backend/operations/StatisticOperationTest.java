@@ -39,6 +39,7 @@ public class StatisticOperationTest {
         statisticOperation = new StatisticOperation(customerManager,
                 subscriptionManager, customerIds);
 
+
     }
 
     @Test
@@ -46,7 +47,23 @@ public class StatisticOperationTest {
     {
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 new StatisticOperation(null, subscriptionManager, customerIds));
-        assertEquals("customerManager1", exception.getMessage());
+        assertEquals("customerManager", exception.getMessage());
+    }
+
+    @Test
+    void testStatisticOperationSubscriptionManagerIsNull()
+    {
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                new StatisticOperation(customerManager, null, customerIds));
+        assertEquals("subscriptionManager", exception.getMessage());
+    }
+
+    @Test
+    void testStatisticOperationCustomerIdsIsNull()
+    {
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                new StatisticOperation(customerManager, subscriptionManager, null));
+        assertEquals("customerIds", exception.getMessage());
     }
 
     @Test
@@ -66,5 +83,8 @@ public class StatisticOperationTest {
             myHashMap.put(customerId, createCustomerInput);
             when(customerManager.getCustomer(customerId)).thenReturn(myHashMap.get(customerId));
         }
+
+        StatisticOperation.StatisticOperationResult res = statisticOperation.Execute();
+        assertEquals(100, res.overallBalance);
     }
 }
