@@ -198,10 +198,15 @@ public class CustomerManager extends ParentManager {
             return contactPojo;
         }
 
+        contactPojo = dbService.getCustomerByLogin(authenticatedUserDetails.getName());
+
+        contactPojo.login = null;
+        contactPojo.pass = null;
+
         // Лабораторная 2: обратите внимание что вернули данных больше чем надо...
         // т.е. getCustomerByLogin честно возвратит все что есть в базе данных по этому customer'у.
         // необходимо написать такой unit тест, который бы отлавливал данное поведение.
-        return dbService.getCustomerByLogin(authenticatedUserDetails.getName());
+        return contactPojo;
     }
 
     public void deleteCustomer(UUID id) {
