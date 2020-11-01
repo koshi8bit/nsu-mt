@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.nsu.fit.tm_backend.database.IDBService;
 import org.nsu.fit.tm_backend.database.data.CustomerPojo;
+import org.nsu.fit.tm_backend.database.data.SubscriptionPojo;
 import org.nsu.fit.tm_backend.manager.CustomerManager;
 import org.nsu.fit.tm_backend.manager.SubscriptionManager;
 import org.nsu.fit.tm_backend.manager.auth.data.AuthenticatedUserDetails;
@@ -16,8 +17,8 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 public class StatisticOperationTest {
     // Лабораторная 2: покрыть юнит тестами класс StatisticOperation на 100%.
@@ -66,25 +67,55 @@ public class StatisticOperationTest {
         assertEquals("customerIds", exception.getMessage());
     }
 
+    CustomerPojo createCustomer(UUID id, int balance)
+    {
+        CustomerPojo createCustomerInput = new CustomerPojo();
+        createCustomerInput.id = id;
+        createCustomerInput.firstName = "john";
+        createCustomerInput.lastName = "Wick";
+        createCustomerInput.login = "john_wick@gmail.com";
+        createCustomerInput.pass = "ig2i2gd";
+        createCustomerInput.balance = balance;
+        return createCustomerInput;
+    }
+
+    SubscriptionPojo createSubs(UUID customer, int fee)
+    {
+        SubscriptionPojo subs = new SubscriptionPojo();
+        subs.customerId = customer;
+        subs.planFee = fee;
+        subs.planDetails = "some info";
+        return subs;
+    }
+
     @Test
     void testExecute()
     {
-        HashMap<UUID, CustomerPojo> myHashMap = new HashMap<>();
-        //List<CustomerPojo> customers = new LinkedList<>();
+        int initBalance = 10;
+        HashMap<UUID, CustomerPojo> customers = new HashMap<>();
         for (UUID customerId : customerIds)
         {
-            CustomerPojo createCustomerInput = new CustomerPojo();
-            createCustomerInput.id = customerId;
-            createCustomerInput.firstName = "john";
-            createCustomerInput.lastName = "Wick";
-            createCustomerInput.login = "john_wick@gmail.com";
-            createCustomerInput.pass = "ig2i2gd";
-            createCustomerInput.balance = 10;
-            myHashMap.put(customerId, createCustomerInput);
-            when(customerManager.getCustomer(customerId)).thenReturn(myHashMap.get(customerId));
+            CustomerPojo createCustomerInput = createCustomer(customerId, initBalance);
+            customers.put(customerId, createCustomerInput);
+            when(customerManager.getCustomer(customerId)).thenReturn(customers.get(customerId));
         }
 
+//        HashMap<UUID, SubscriptionPojo> subs = new HashMap<>();
+//        for (UUID customerId : customerIds)
+//        {
+//            SubscriptionPojo createSubInput = new SubscriptionPojo();
+//            createSubInput.customerId = customerId;
+//            createCustomerInput.firstName = "john";
+//            createCustomerInput.lastName = "Wick";
+//            createCustomerInput.login = "john_wick@gmail.com";
+//            createCustomerInput.pass = "ig2i2gd";
+//            createCustomerInput.balance = 10;
+//            customers.put(customerId, createCustomerInput);
+//            when(customerManager.getCustomer(customerId)).thenReturn(customers.get(customerId));
+//        }
+
         StatisticOperation.StatisticOperationResult res = statisticOperation.Execute();
-        assertEquals(100, res.overallBalance);
+        assertEquals(initBalance*customers.size(), res.overallBalance);
+        //verify(customerManager, times(customerIds.size())).getCustomer();
     }
 }
