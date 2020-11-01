@@ -79,43 +79,51 @@ public class StatisticOperationTest {
         return createCustomerInput;
     }
 
-    SubscriptionPojo createSubs(UUID customer, int fee)
+    List<SubscriptionPojo> createSubs(UUID customer, int fee, int count)
     {
-        SubscriptionPojo subs = new SubscriptionPojo();
-        subs.customerId = customer;
-        subs.planFee = fee;
-        subs.planDetails = "some info";
+        List<SubscriptionPojo> subs = new LinkedList<>();
+        for (int i = 0; i < count; i++) {
+            SubscriptionPojo sub = new SubscriptionPojo();
+            sub.customerId = customer;
+            sub.planFee = fee;
+            sub.planDetails = "some info";
+            subs.add(sub);
+        }
+
         return subs;
     }
 
     @Test
     void testExecute()
     {
-        int initBalance = 10;
+        int initCustomerBalance = 10;
+        int initPlanFee = 3;
+        int planCount = 2;
+
         HashMap<UUID, CustomerPojo> customers = new HashMap<>();
         for (UUID customerId : customerIds)
         {
-            CustomerPojo createCustomerInput = createCustomer(customerId, initBalance);
+            CustomerPojo createCustomerInput = createCustomer(customerId, initCustomerBalance);
             customers.put(customerId, createCustomerInput);
+
             when(customerManager.getCustomer(customerId)).thenReturn(customers.get(customerId));
+            when(subscriptionManager.getSubscriptions(customerId)).thenReturn(createSubs(customerId, initPlanFee, planCount));
         }
 
 //        HashMap<UUID, SubscriptionPojo> subs = new HashMap<>();
 //        for (UUID customerId : customerIds)
 //        {
-//            SubscriptionPojo createSubInput = new SubscriptionPojo();
-//            createSubInput.customerId = customerId;
-//            createCustomerInput.firstName = "john";
-//            createCustomerInput.lastName = "Wick";
-//            createCustomerInput.login = "john_wick@gmail.com";
-//            createCustomerInput.pass = "ig2i2gd";
-//            createCustomerInput.balance = 10;
-//            customers.put(customerId, createCustomerInput);
+//            List<SubscriptionPojo> subs = new LinkedList<>();
+//            SubscriptionPojo sub = new SubscriptionPojo();
+//            sub.customerId = customer;
+//            sub.planFee = fee;
+//            sub.planDetails = "some info";
+//            subs.add(sub);
 //            when(customerManager.getCustomer(customerId)).thenReturn(customers.get(customerId));
 //        }
 
         StatisticOperation.StatisticOperationResult res = statisticOperation.Execute();
-        assertEquals(initBalance*customers.size(), res.overallBalance);
-        //verify(customerManager, times(customerIds.size())).getCustomer();
+        assertEquals(initCustomerBalance*customers.size(), res.overallBalance);
+        assertEquals(initPlanFee*planCount*customers.size(), res.overallFee);
     }
 }
