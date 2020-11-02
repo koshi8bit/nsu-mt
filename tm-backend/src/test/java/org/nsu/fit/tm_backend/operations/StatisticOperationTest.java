@@ -100,13 +100,8 @@ public class StatisticOperationTest {
         int planFee = 3;
         int planCount = 2;
 
-        //HashMap<UUID, CustomerPojo> customers = new HashMap<>();
         for (UUID customerId : customerIds)
         {
-            //CustomerPojo createCustomerInput = createCustomer(customerId, initCustomerBalance);
-            //customers.put(customerId, createCustomerInput);
-
-            //when(customerManager.getCustomer(customerId)).thenReturn(customers.get(customerId));
             when(customerManager.getCustomer(customerId)).thenReturn(createCustomer(customerId, customerBalance));
             when(subscriptionManager.getSubscriptions(customerId)).thenReturn(createSubs(customerId, planFee, planCount));
         }
@@ -116,19 +111,6 @@ public class StatisticOperationTest {
                 res.overallBalance);
         assertEquals(planFee * planCount * customerIds.size(),
                 res.overallFee);
-
-
-//        HashMap<UUID, SubscriptionPojo> subs = new HashMap<>();
-//        for (UUID customerId : customerIds)
-//        {
-//            List<SubscriptionPojo> subs = new LinkedList<>();
-//            SubscriptionPojo sub = new SubscriptionPojo();
-//            sub.customerId = customer;
-//            sub.planFee = fee;
-//            sub.planDetails = "some info";
-//            subs.add(sub);
-//            when(customerManager.getCustomer(customerId)).thenReturn(customers.get(customerId));
-//        }
 
 
     }
