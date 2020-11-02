@@ -96,8 +96,8 @@ public class StatisticOperationTest {
     @Test
     void testExecute()
     {
-        int initCustomerBalance = 10;
-        int initPlanFee = 3;
+        int customerBalance = 10;
+        int planFee = 3;
         int planCount = 2;
 
         //HashMap<UUID, CustomerPojo> customers = new HashMap<>();
@@ -107,14 +107,14 @@ public class StatisticOperationTest {
             //customers.put(customerId, createCustomerInput);
 
             //when(customerManager.getCustomer(customerId)).thenReturn(customers.get(customerId));
-            when(customerManager.getCustomer(customerId)).thenReturn(createCustomer(customerId, initCustomerBalance));
-            when(subscriptionManager.getSubscriptions(customerId)).thenReturn(createSubs(customerId, initPlanFee, planCount));
+            when(customerManager.getCustomer(customerId)).thenReturn(createCustomer(customerId, customerBalance));
+            when(subscriptionManager.getSubscriptions(customerId)).thenReturn(createSubs(customerId, planFee, planCount));
         }
 
         StatisticOperation.StatisticOperationResult res = statisticOperation.Execute();
-        assertEquals(initCustomerBalance * customerIds.size(),
+        assertEquals(customerBalance * customerIds.size(),
                 res.overallBalance);
-        assertEquals(initPlanFee * planCount * customerIds.size(),
+        assertEquals(planFee * planCount * customerIds.size(),
                 res.overallFee);
 
 
