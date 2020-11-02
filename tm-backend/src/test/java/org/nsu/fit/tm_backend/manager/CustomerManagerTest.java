@@ -26,6 +26,7 @@ class CustomerManagerTest {
     private CustomerManager customerManager;
 
     private CustomerPojo createCustomerInput;
+    LinkedList<CustomerPojo> customerList = new LinkedList<>();
     private AuthenticatedUserDetails authenticatedUserDetails;
 
     @BeforeEach
@@ -38,6 +39,26 @@ class CustomerManagerTest {
         // Создаем класс, методы которого будем тестировать,
         // и передаем ему наши mock объекты.
         customerManager = new CustomerManager(dbService, logger);
+
+
+        CustomerPojo createCustomerOutput1 = new CustomerPojo();
+        createCustomerOutput1.id = UUID.randomUUID();
+        createCustomerOutput1.firstName = "John1";
+        createCustomerOutput1.lastName = "Wick1";
+        createCustomerOutput1.login = "john_wick1@gmail.com";
+        createCustomerOutput1.pass = "Baba_Jaga1";
+        createCustomerOutput1.balance = 0;
+
+        CustomerPojo createCustomerOutput2 = new CustomerPojo();
+        createCustomerOutput2.id = UUID.randomUUID();
+        createCustomerOutput2.firstName = "John2";
+        createCustomerOutput2.lastName = "Wick2";
+        createCustomerOutput2.login = "john_wick2@gmail.com";
+        createCustomerOutput2.pass = "Baba_Jaga2";
+        createCustomerOutput2.balance = 0;
+
+        customerList.add(createCustomerOutput1);
+        customerList.add(createCustomerOutput2);
     }
 
     @Test
@@ -393,27 +414,8 @@ class CustomerManagerTest {
     @Test
     void testGetCustomers()
     {
-        CustomerPojo createCustomerOutput1 = new CustomerPojo();
-        createCustomerOutput1.id = UUID.randomUUID();
-        createCustomerOutput1.firstName = "John";
-        createCustomerOutput1.lastName = "Wick1";
-        createCustomerOutput1.login = "john_wick1@gmail.com";
-        createCustomerOutput1.pass = "Baba_Jaga";
-        createCustomerOutput1.balance = 0;
 
-        CustomerPojo createCustomerOutput2 = new CustomerPojo();
-        createCustomerOutput2.id = UUID.randomUUID();
-        createCustomerOutput2.firstName = "John2";
-        createCustomerOutput2.lastName = "Wick2";
-        createCustomerOutput2.login = "john_wick2@gmail.com";
-        createCustomerOutput2.pass = "Baba_Jaga2";
-        createCustomerOutput2.balance = 0;
-
-        LinkedList<CustomerPojo> list = new LinkedList<>();
-        list.add(createCustomerOutput1);
-        list.add(createCustomerOutput2);
-
-        when(dbService.getCustomers()).thenReturn(list);
+        when(dbService.getCustomers()).thenReturn(customerList);
 
         List<CustomerPojo> customers = customerManager.getCustomers();
         assertEquals("Wick1", customers.get(0).lastName);
@@ -450,30 +452,16 @@ class CustomerManagerTest {
     @Test
     void testLookupCustomer()
     {
-        CustomerPojo createCustomerOutput1 = new CustomerPojo();
-        createCustomerOutput1.id = UUID.randomUUID();
-        createCustomerOutput1.firstName = "John";
-        createCustomerOutput1.lastName = "Wick";
-        createCustomerOutput1.login = "john_wick1@gmail.com";
-        createCustomerOutput1.pass = "Baba_Jaga";
-        createCustomerOutput1.balance = 0;
-
-        CustomerPojo createCustomerOutput2 = new CustomerPojo();
-        createCustomerOutput2.id = UUID.randomUUID();
-        createCustomerOutput2.firstName = "John2";
-        createCustomerOutput2.lastName = "Wick2";
-        createCustomerOutput2.login = "john_wick2@gmail.com";
-        createCustomerOutput2.pass = "Baba_Jaga2";
-        createCustomerOutput2.balance = 0;
-
-        LinkedList<CustomerPojo> list = new LinkedList<>();
-        list.add(createCustomerOutput1);
-        list.add(createCustomerOutput2);
-
-        when(dbService.getCustomers()).thenReturn(list);
+        when(dbService.getCustomers()).thenReturn(customerList);
 
         CustomerPojo customer = customerManager.lookupCustomer("john_wick2@gmail.com");
+        assertEquals("John2", customer.firstName);
         assertEquals("Wick2", customer.lastName);
+        assertEquals("john_wick2@gmail.com", customer.login);
+        assertEquals("Baba_Jaga2", customer.pass);
+        assertEquals(0, customer.balance);
+
+        verify(dbService, times(1)).getCustomers();
     }
 
     @Test
