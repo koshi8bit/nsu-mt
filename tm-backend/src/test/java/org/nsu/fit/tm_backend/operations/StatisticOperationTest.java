@@ -100,15 +100,23 @@ public class StatisticOperationTest {
         int initPlanFee = 3;
         int planCount = 2;
 
-        HashMap<UUID, CustomerPojo> customers = new HashMap<>();
+        //HashMap<UUID, CustomerPojo> customers = new HashMap<>();
         for (UUID customerId : customerIds)
         {
-            CustomerPojo createCustomerInput = createCustomer(customerId, initCustomerBalance);
-            customers.put(customerId, createCustomerInput);
+            //CustomerPojo createCustomerInput = createCustomer(customerId, initCustomerBalance);
+            //customers.put(customerId, createCustomerInput);
 
-            when(customerManager.getCustomer(customerId)).thenReturn(customers.get(customerId));
+            //when(customerManager.getCustomer(customerId)).thenReturn(customers.get(customerId));
+            when(customerManager.getCustomer(customerId)).thenReturn(createCustomer(customerId, initCustomerBalance));
             when(subscriptionManager.getSubscriptions(customerId)).thenReturn(createSubs(customerId, initPlanFee, planCount));
         }
+
+        StatisticOperation.StatisticOperationResult res = statisticOperation.Execute();
+        assertEquals(initCustomerBalance * customerIds.size(),
+                res.overallBalance);
+        assertEquals(initPlanFee * planCount * customerIds.size(),
+                res.overallFee);
+
 
 //        HashMap<UUID, SubscriptionPojo> subs = new HashMap<>();
 //        for (UUID customerId : customerIds)
@@ -122,8 +130,6 @@ public class StatisticOperationTest {
 //            when(customerManager.getCustomer(customerId)).thenReturn(customers.get(customerId));
 //        }
 
-        StatisticOperation.StatisticOperationResult res = statisticOperation.Execute();
-        assertEquals(initCustomerBalance*customers.size(), res.overallBalance);
-        assertEquals(initPlanFee*planCount*customers.size(), res.overallFee);
+
     }
 }
