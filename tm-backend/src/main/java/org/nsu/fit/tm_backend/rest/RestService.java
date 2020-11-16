@@ -75,7 +75,7 @@ public class RestService {
         }
     }
 
-    // Example request: ../customers?login='john_wick@gmail.com'
+    // Example request: ../customers?login='john_wick@example.com'
     @GET
     @Path("/customers")
     @Produces(MediaType.APPLICATION_JSON)
