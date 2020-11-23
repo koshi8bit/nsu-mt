@@ -3,6 +3,10 @@
     <test name="AuthTest">
         <classes>
             <class name="org.nsu.fit.tests.api.AuthTest" />
+            <class name="org.nsu.fit.tests.api.UserTest" />
+            <class name="org.nsu.fit.tests.api.PlanTest" />
+            <class name="org.nsu.fit.tests.api.SubsTest" />
+            <class name="org.nsu.fit.tests.api.UserUnvalidTest" />
         </classes>
     </test>
 </suite>
