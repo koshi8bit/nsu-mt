@@ -37,12 +37,13 @@ public class RestClient {
 
         Faker faker = new Faker();
 
-        // Лабораторная 3: Добавить обработку генерацию фейковых имен, фамилий и логинов.
+        // Лабораторная 3: Добавить генерацию фейковых имен, фамилий и логинов.
         // * Исследовать этот вопрос более детально, возможно прикрутить специальную библиотеку для генерации фейковых данных.
         contactPojo.firstName = faker.name().firstName();
         contactPojo.lastName = faker.name().lastName();
         contactPojo.login = faker.internet().emailAddress();
         contactPojo.pass = faker.internet().password(6, 12);
+
 
 
         return post("customers", JsonMapper.toJson(contactPojo, true), CustomerPojo.class, accountToken);
@@ -68,6 +69,7 @@ public class RestClient {
 
         planPojo.id = UUID.randomUUID();
         planPojo.fee = fee;
+
         Book book = faker.book();
         planPojo.name = book.title();
         //planPojo.details = faker.chuckNorris().fact();
