@@ -4,6 +4,10 @@ import io.qameta.allure.Attachment;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -22,7 +26,7 @@ public class Browser implements Closeable {
     public Browser() {
         // create web driver.
         try {
-            ChromeOptions chromeOptions = new ChromeOptions();
+            /*ChromeOptions chromeOptions = new ChromeOptions();
 
             // for running in Docker container as 'root'.
             chromeOptions.addArguments("no-sandbox");
@@ -30,27 +34,31 @@ public class Browser implements Closeable {
             chromeOptions.addArguments("disable-setuid-sandbox");
             chromeOptions.addArguments("disable-infobars");
 
+
             chromeOptions.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
             chromeOptions.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
+*/
 
-            // we use Windows platform for development only and not for AT launch.
-            // For launch AT regression, we use Linux platform.
+            FirefoxOptions firefoxOptions = new FirefoxOptions();
+
+            firefoxOptions.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+            firefoxOptions.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
             if (System.getProperty("os.name").toLowerCase().contains("win")) {
                 // Лабораторная 4: Указать путь до chromedriver на вашей системе.
                 // Для того чтобы подобрать нужный chromedriver, необходимо посмотреть версию браузера Chrome
                 // на системе, на которой будут запускаться тесты и скачать соотвествующий ей chromedriver с сайта:
                 // https://chromedriver.chromium.org/downloads
-                System.setProperty("webdriver.chrome.driver", "C:/Tools/chromedriver/chromedriver.exe");
-                chromeOptions.setHeadless(Boolean.parseBoolean(System.getProperty("headless")));
-                webDriver = new ChromeDriver(chromeOptions);
+                System.setProperty("webdriver.gecko.driver", "C:/Tools/foxdriver/geckodriver.exe");
+                //chromeOptions.setHeadless(Boolean.parseBoolean(System.getProperty("headless")));
+                webDriver = new FirefoxDriver(firefoxOptions);
             } else {
-                File f = new File("/usr/bin/chromedriver");
+                /*File f = new File("/usr/bin/chromedriver");
                 if (f.exists()) {
                     chromeOptions.addArguments("single-process");
                     chromeOptions.addArguments("headless");
                     System.setProperty("webdriver.chrome.driver", f.getPath());
                     webDriver = new ChromeDriver(chromeOptions);
-                }
+                }*/
             }
 
             if (webDriver == null) {
@@ -66,6 +74,10 @@ public class Browser implements Closeable {
     public Browser openPage(String url) {
         webDriver.get(url);
         return this;
+    }
+
+    public String currentPage() {
+        return webDriver.getCurrentUrl();
     }
 
     public Browser waitForElement(By element) {
@@ -86,6 +98,23 @@ public class Browser implements Closeable {
         return this;
     }
 
+    public Browser click(By element, int index) {
+        makeScreenshot();
+        webDriver.findElements(element).get(index).click();
+        return this;
+    }
+
+
+    public Browser click(By element, boolean lastElement) {
+        if (lastElement) {
+            webDriver.findElements(element).get(webDriver.findElements(element).size() - 1).click();
+        } else {
+            webDriver.findElements(element).get(0).click();
+        }
+        webDriver.getWindowHandle();
+        return this;
+    }
+
     public Browser typeText(By element, String text) {
         makeScreenshot();
         webDriver.findElement(element).sendKeys(text);
@@ -95,6 +124,16 @@ public class Browser implements Closeable {
     public String getValue(By element) {
         makeScreenshot();
         return webDriver.findElement(element).getAttribute("value");
+    }
+
+    public Browser removeValue (By element) {
+        webDriver.findElement(element).clear();
+        return this;
+    }
+
+    public String getText(By element) {
+        makeScreenshot();
+        return webDriver.findElement(element).getText();
     }
 
     public boolean isElementPresent(By element) {
