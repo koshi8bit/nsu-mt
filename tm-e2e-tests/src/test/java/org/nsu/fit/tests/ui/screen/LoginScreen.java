@@ -18,6 +18,7 @@ public class LoginScreen extends Screen {
         browser.typeText(By.id("password"), "setup");
 
         browser.click(By.xpath("//button[@type = 'submit']"));
+        browser.waitForElement(By.xpath("//button[@title = 'Add Customer']"));
 
         // Лабораторная 4: В текущий момент в браузере еще не открылась
         // нужная страница (AdminScreen), и при обращении к ее элементам, могут происходить
