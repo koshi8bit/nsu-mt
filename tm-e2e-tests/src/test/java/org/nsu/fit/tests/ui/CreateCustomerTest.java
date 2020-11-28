@@ -1,8 +1,11 @@
 package org.nsu.fit.tests.ui;
 
+import com.github.javafaker.Faker;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import org.nsu.fit.ex.exxx;
+import org.nsu.fit.services.rest.data.CustomerPojo;
 import org.nsu.fit.tests.ui.screen.LoginScreen;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -21,14 +24,23 @@ public class CreateCustomerTest {
     @Test(description = "Create customer via UI.")
     @Severity(SeverityLevel.BLOCKER)
     @Feature("Create customer feature")
-    public void createCustomer() {
+    public void createCustomer() throws exxx {
+        CustomerPojo customerPojo = new CustomerPojo();
+        Faker faker = new Faker();
+
+        customerPojo.firstName = faker.name().firstName();
+        customerPojo.lastName = faker.name().lastName();
+        customerPojo.login = faker.internet().emailAddress();
+        customerPojo.pass = faker.internet().password(6, 12);
+
         new LoginScreen(browser)
                 .loginAsAdmin()
                 .createCustomer()
-                .fillEmail("john_wick@example.com")
-                .fillPassword("Baba_Jaga")
-                .fillFirstName("John")
-                .fillLastName("Wick");
+                .fillEmail(customerPojo.login)
+                .fillPassword(customerPojo.pass)
+                .fillFirstName(customerPojo.firstName)
+                .fillLastName(customerPojo.lastName)
+                .clickSubmit();
 
         // Лабораторная 4: Проверить что customer создан с ранее переданными полями.
         // Решить проблему с генерацией случайных данных.
