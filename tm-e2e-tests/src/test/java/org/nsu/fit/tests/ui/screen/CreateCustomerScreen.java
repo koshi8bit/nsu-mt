@@ -54,7 +54,7 @@ public class CreateCustomerScreen extends Screen {
         catch (TimeoutException e)
         {
             Assert.assertEquals(browser.currentPage(), "http://localhost:8080/tm-frontend/add-customer");
-            String message = browser.getText(By.xpath("//div[@id='root'/")); // TODO
+            String message = browser.getText(By.xpath("//div[@id='root']/")); // TODO
             throw new exxx(message);
         }
     }
