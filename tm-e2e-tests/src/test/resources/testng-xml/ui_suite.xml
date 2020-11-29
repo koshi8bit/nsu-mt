@@ -6,6 +6,7 @@
             <class name="org.nsu.fit.tests.ui.CreateCustomerFailedTest" />
             <class name="org.nsu.fit.tests.ui.LoginAsAdmin" />
             <class name="org.nsu.fit.tests.ui.PlansTest" />
+            <class name="org.nsu.fit.tests.ui.CustomerTest" />
         </classes>
     </test>
 </suite>

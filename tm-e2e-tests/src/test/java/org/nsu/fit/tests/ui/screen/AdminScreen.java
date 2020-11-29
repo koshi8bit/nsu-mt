@@ -11,18 +11,23 @@ public class AdminScreen extends Screen {
         super(browser);
     }
 
+    private void waitAndClick(String xpath)
+    {
+        browser.waitForElement(By.xpath(xpath));
+        browser.click(By.xpath(xpath));
+    }
+
     public CreateCustomerScreen createCustomer() {
 
-        browser.waitForElement(By.xpath("//button[@title = 'Add Customer']"));
-        browser.click(By.xpath("//button[@title = 'Add Customer']"));
+        waitAndClick("//button[@title = 'Add Customer']");
 
         return new CreateCustomerScreen(browser);
     }
 
-    public CreatePlanScreen createPlan() {
+    public CreatePlanScreen createPlan()
+    {
 
-        browser.waitForElement(By.xpath("//button[@title = 'Add plan']"));
-        browser.click(By.xpath("//button[@title = 'Add plan']"));
+        waitAndClick("//button[@title = 'Add plan']");
 
         return new CreatePlanScreen(browser);
     }
