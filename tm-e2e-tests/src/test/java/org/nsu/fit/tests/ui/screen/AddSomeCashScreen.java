@@ -46,7 +46,7 @@ public class AddSomeCashScreen extends Screen {
         catch (TimeoutException e)
         {
             Assert.assertEquals(browser.currentPage(),
-                    "http://localhost:8080/tm-frontend/add-customer");
+                    "http://localhost:8080/tm-frontend/top-up-balance");
             String message = browser.getText(By.xpath("/html/body/div[1]/div/div/div[1]"));
             throw new exxx(message);
         }

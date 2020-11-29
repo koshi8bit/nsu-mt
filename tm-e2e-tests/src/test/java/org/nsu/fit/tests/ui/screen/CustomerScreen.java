@@ -21,4 +21,10 @@ public class CustomerScreen extends Screen {
 
         return new AddSomeCashScreen(browser);
     }
+
+    public CustomerScreen buyFirstPlan()
+    {
+
+        return this;
+    }
 }

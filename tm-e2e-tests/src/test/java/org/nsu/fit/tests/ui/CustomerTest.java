@@ -29,15 +29,21 @@ public class CustomerTest {
     @Test(description = "Add some cash")
     @Severity(SeverityLevel.BLOCKER)
     @Feature("Customer")
-    public void createPlan() throws exxx {
+    public void addSomeCash() throws exxx {
         new LoginScreen(browser)
-                .loginAsCustomer("a@b.com", "1234567");
-//                .createPlan()
-//                .fillName(planPojo.name)
-//                .fillDetails(planPojo.details)
-//                .fillFee(planPojo.fee)
-//                .clickSubmit()
-//                .isPlanCreated(planPojo);
+                .loginAsCustomer("a@b.com", "1234567")
+                .addSomeCash()
+                .fillCash(100)
+                .clickSubmit();
+    }
+
+    @Test(description = "Buy plan", dependsOnMethods = "addSomeCash")
+    @Severity(SeverityLevel.BLOCKER)
+    @Feature("Customer")
+    public void buyPlan() throws exxx {
+        new LoginScreen(browser)
+                .loginAsCustomer("a@b.com", "1234567")
+                ;
     }
 
     @AfterClass
