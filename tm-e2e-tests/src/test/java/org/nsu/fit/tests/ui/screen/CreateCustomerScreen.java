@@ -42,7 +42,6 @@ public class CreateCustomerScreen extends Screen {
     // когда при нажатии на кнопку Submit ('Create') не произойдет переход на AdminScreen,
     // а будет показана та или иная ошибка на текущем скрине.
     public AdminScreen clickSubmit() throws exxx {
-        // TODO: Please implement this...
         browser.waitForElement(By.xpath("//button[@type = 'submit']"));
         Assert.assertEquals(browser.currentPage(), "http://localhost:8080/tm-frontend/add-customer");
         browser.click(By.xpath("//button[@type = 'submit']"));
@@ -53,14 +52,17 @@ public class CreateCustomerScreen extends Screen {
         }
         catch (TimeoutException e)
         {
-            Assert.assertEquals(browser.currentPage(), "http://localhost:8080/tm-frontend/add-customer");
-            String message = browser.getText(By.xpath("//div[@id='root']/")); // TODO
+            Assert.assertEquals(browser.currentPage(),
+                    "http://localhost:8080/tm-frontend/add-customer");
+            String message = browser.getText(By.xpath("/html/body/div[1]/div/div/div[1]"));
             throw new exxx(message);
         }
     }
 
     public AdminScreen clickCancel() {
-        // TODO: Please implement this...
+        browser.waitForElement(By.xpath("//button[@type = 'submit']"));
+        browser.click(By.xpath("//button[contains(text(),'Back')]"));
+        browser.waitForElement(By.xpath("//button[@title = 'Add Customer']"));
         return new AdminScreen(browser);
     }
 }

@@ -47,11 +47,11 @@ public class CreateCustomerFailedTest {
                 .clickSubmit());
 
         //browser.waitForElement(By.xpath("//button[@title = 'Add Customer']"));
-//        Assert.assertEquals(browser.currentPage(),
-//                "http://localhost:8080/tm-frontend/add-customer");
+        Assert.assertEquals(browser.currentPage(),
+                "http://localhost:8080/tm-frontend/add-customer");
 
-//        String text = browser.getText(By.xpath("/html/body/div[1]/div/div/div[1]"));
-//        Logger.debug(text);
+        String text = browser.getText(By.xpath("/html/body/div[1]/div/div/div[1]"));
+        Logger.debug(text);
     }
 
     @AfterClass
