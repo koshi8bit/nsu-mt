@@ -44,7 +44,7 @@ public class Browser implements Closeable {
             firefoxOptions.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
             firefoxOptions.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
             if (System.getProperty("os.name").toLowerCase().contains("win")) {
-                // Лабораторная 4: Указать путь до chromedriver на вашей системе.
+                // OK Лабораторная 4: Указать путь до chromedriver на вашей системе.
                 // Для того чтобы подобрать нужный chromedriver, необходимо посмотреть версию браузера Chrome
                 // на системе, на которой будут запускаться тесты и скачать соотвествующий ей chromedriver с сайта:
                 // https://chromedriver.chromium.org/downloads

@@ -4,7 +4,7 @@ import org.nsu.fit.services.browser.Browser;
 import org.nsu.fit.shared.Screen;
 import org.openqa.selenium.By;
 
-// Лабораторная 4: Необходимо имплементировать реализацию методов данного класса,
+// OK Лабораторная 4: Необходимо имплементировать реализацию методов данного класса,
 // а при необходимости расширить его.
 public class LoginScreen extends Screen {
     public LoginScreen(Browser browser) {

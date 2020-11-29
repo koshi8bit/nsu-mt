@@ -38,7 +38,7 @@ public class CreateCustomerScreen extends Screen {
         return this;
     }
 
-    // Лабораторная 4: Подумайте как обработать ситуацию,
+    // OK Лабораторная 4: Подумайте как обработать ситуацию,
     // когда при нажатии на кнопку Submit ('Create') не произойдет переход на AdminScreen,
     // а будет показана та или иная ошибка на текущем скрине.
     public AdminScreen clickSubmit() throws exxx {
