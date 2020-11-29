@@ -11,6 +11,12 @@ public class CustomerScreen extends Screen {
         super(browser);
     }
 
+    private void waitAndClick(String xpath, int index)
+    {
+        browser.waitForElement(By.xpath(xpath), 1);
+        browser.click(By.xpath(xpath), index);
+    }
+
     private void waitAndClick(String xpath)
     {
         browser.waitForElement(By.xpath(xpath), 1);
@@ -28,6 +34,58 @@ public class CustomerScreen extends Screen {
         waitAndClick("//*[@title = 'Buy Plan']");
         //waitAndClick("//*[@title = 'Save']"); //TODO NW
         waitAndClick("/html/body/div[1]/div/div/div/div/div[2]/div[2]/div/div/div/table/tbody/tr[1]/td[1]/div/button[1]");
+        TimeUnit.SECONDS.sleep(2);
+
+        return this;
+    }
+
+    private boolean tryPush(int index)
+    {
+        String first = "/html/body/div[1]/div/div/div/div/div[1]/div[2]/div/div/div/table/tbody/tr[%]/td[1]/div/button"
+                .replace("%", String.valueOf(index));
+        String second = first + "[1]";
+
+        if (browser.isElementPresent(By.xpath(first)))
+        {
+            waitAndClick(first);
+            waitAndClick(first, 0);
+            return true;
+        }
+        return false;
+    }
+
+    private void pushLastDelete()
+    {
+        if (tryPush(5))
+            return;
+
+        if (tryPush(4))
+            return;
+
+        if (tryPush(3))
+            return;
+
+        if (tryPush(2))
+            return;
+
+        if (tryPush(1))
+            return;
+    }
+
+    public CustomerScreen deleteLastPlan() throws InterruptedException {
+        browser.waitForElement(By.xpath("//*[@title='Last Page']"));
+        try
+        {
+            browser.click(By.xpath("//*[@title='Last Page']"), 0);
+        }
+        catch (Exception ignored) {}
+
+
+        pushLastDelete();
+
+        //waitAndClick("//*[@title = 'Save']"); //TODO NW
+        //waitAndClick("//*[@title = 'Delete']");
+        //waitAndClick("/html/body/div[1]/div/div/div/div/div[1]/div[2]/div/div/div/table/tbody/tr[1]/td[1]/div/button[1]");
         TimeUnit.SECONDS.sleep(2);
 
         return this;

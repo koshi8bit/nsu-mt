@@ -8,6 +8,7 @@ import io.qameta.allure.SeverityLevel;
 import org.nsu.fit.ex.exxx;
 import org.nsu.fit.services.rest.data.CustomerPojo;
 import org.nsu.fit.services.rest.data.PlanPojo;
+import org.nsu.fit.tests.ui.screen.CustomerScreen;
 import org.nsu.fit.tests.ui.screen.LoginScreen;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -37,14 +38,22 @@ public class CustomerTest {
                 .clickSubmit();
     }
 
-    //@Test(description = "Buy plan", dependsOnMethods = "addSomeCash") //TODO NW
-    @Test(description = "Buy plan")
+    @Test(description = "Buy plan", dependsOnMethods = "addSomeCash")
     @Severity(SeverityLevel.BLOCKER)
     @Feature("Customer")
     public void buyPlan() throws InterruptedException {
-        new LoginScreen(browser)
-                .loginAsCustomer("a@b.com", "1234567")
+        new CustomerScreen(browser)
+                //.loginAsCustomer("a@b.com", "1234567")
                 .buyFirstPlan();
+    }
+
+    @Test(description = "Delete plan", dependsOnMethods = "buyPlan")
+    @Severity(SeverityLevel.BLOCKER)
+    @Feature("Customer")
+    public void deletePlan() throws InterruptedException {
+        new CustomerScreen(browser)
+                //.loginAsCustomer("a@b.com", "1234567")
+                .deleteLastPlan();
     }
 
     @AfterClass
