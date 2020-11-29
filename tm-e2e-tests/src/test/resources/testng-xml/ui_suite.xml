@@ -4,6 +4,8 @@
         <classes>
             <class name="org.nsu.fit.tests.ui.CreateCustomerTest" />
             <class name="org.nsu.fit.tests.ui.CreateCustomerFailedTest" />
+            <class name="org.nsu.fit.tests.ui.LoginAsAdmin" />
+            <class name="org.nsu.fit.tests.ui.PlansTest" />
         </classes>
     </test>
 </suite>

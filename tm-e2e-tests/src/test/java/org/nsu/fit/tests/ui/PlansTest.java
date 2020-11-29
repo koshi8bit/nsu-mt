@@ -1,11 +1,13 @@
 package org.nsu.fit.tests.ui;
 
+import com.github.javafaker.Book;
 import com.github.javafaker.Faker;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import org.nsu.fit.ex.exxx;
 import org.nsu.fit.services.rest.data.CustomerPojo;
+import org.nsu.fit.services.rest.data.PlanPojo;
 import org.nsu.fit.tests.ui.screen.LoginScreen;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -14,7 +16,9 @@ import org.testng.annotations.Test;
 import org.nsu.fit.services.browser.Browser;
 import org.nsu.fit.services.browser.BrowserService;
 
-public class LoginAsAdmin {
+import java.util.UUID;
+
+public class PlansTest {
     private Browser browser = null;
 
     @BeforeClass
@@ -22,13 +26,30 @@ public class LoginAsAdmin {
         browser = BrowserService.openNewBrowser();
     }
 
-    @Test(description = "Login as admin")
+    @Test(description = "Create new plan")
     @Severity(SeverityLevel.BLOCKER)
-    @Feature("Login")
-    public void authAsAdmin() {
+    @Feature("Plans")
+    public void createPlan() throws exxx {
+        PlanPojo planPojo = new PlanPojo();
+        Faker faker = new Faker();
+
+        planPojo.id = UUID.randomUUID();
+        planPojo.fee = 20;
+
+        Book book = faker.book();
+        planPojo.name = book.title();
+        //planPojo.details = faker.chuckNorris().fact();
+        planPojo.details = book.author();
+
+
         new LoginScreen(browser)
-                .loginAsAdmin();
-        Assert.assertEquals(browser.currentPage(), "http://localhost:8080/tm-frontend/admin");
+                .loginAsAdmin()
+                .createPlan()
+                .fillName(planPojo.name)
+                .fillDetails(planPojo.details)
+                .fillFee(planPojo.fee)
+                .clickSubmit()
+                .isPlanCreated(planPojo);
     }
 
     @AfterClass

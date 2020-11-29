@@ -12,29 +12,29 @@ public class CreateCustomerScreen extends Screen {
         super(browser);
     }
 
-    private void aaa(String name, String value)
+    private void fill(String name, String value)
     {
         browser.waitForElement(By.name(name));
         browser.typeText(By.name(name), value);
     }
 
     public CreateCustomerScreen fillEmail(String email) {
-        aaa("login", email);
+        fill("login", email);
         return this;
     }
 
     public CreateCustomerScreen fillPassword(String password) {
-        aaa("password", password);
+        fill("password", password);
         return this;
     }
 
     public CreateCustomerScreen fillFirstName(String firstName) {
-        aaa("firstName", firstName);
+        fill("firstName", firstName);
         return this;
     }
 
     public CreateCustomerScreen fillLastName(String lastName) {
-        aaa("lastName", lastName);
+        fill("lastName", lastName);
         return this;
     }
 
