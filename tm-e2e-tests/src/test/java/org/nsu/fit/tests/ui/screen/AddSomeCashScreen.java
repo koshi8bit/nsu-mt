@@ -23,6 +23,7 @@ public class AddSomeCashScreen extends Screen {
     private void fill(String name, String value)
     {
         browser.waitForElement(By.name(name));
+        browser.removeValue(By.name(name));
         browser.typeText(By.name(name), value);
     }
 

@@ -37,13 +37,14 @@ public class CustomerTest {
                 .clickSubmit();
     }
 
-    @Test(description = "Buy plan", dependsOnMethods = "addSomeCash")
+    //@Test(description = "Buy plan", dependsOnMethods = "addSomeCash") //TODO NW
+    @Test(description = "Buy plan")
     @Severity(SeverityLevel.BLOCKER)
     @Feature("Customer")
-    public void buyPlan() throws exxx {
+    public void buyPlan() throws InterruptedException {
         new LoginScreen(browser)
                 .loginAsCustomer("a@b.com", "1234567")
-                ;
+                .buyFirstPlan();
     }
 
     @AfterClass
