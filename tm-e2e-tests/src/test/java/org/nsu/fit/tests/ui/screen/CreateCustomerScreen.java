@@ -47,7 +47,7 @@ public class CreateCustomerScreen extends Screen {
         browser.click(By.xpath("//button[@type = 'submit']"));
         try
         {
-            browser.waitForElement(By.xpath("//button[@title = 'Add Customer']"));
+            browser.waitForElement(By.xpath("//button[@title = 'Add Customer']"), 2);
             return new AdminScreen(browser);
         }
         catch (TimeoutException e)

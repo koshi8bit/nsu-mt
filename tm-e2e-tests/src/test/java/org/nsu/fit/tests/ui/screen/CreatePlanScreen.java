@@ -15,6 +15,7 @@ public class CreatePlanScreen extends Screen {
     private void fill(String name, String value)
     {
         browser.waitForElement(By.name(name));
+        browser.removeValue(By.name(name));
         browser.typeText(By.name(name), value);
     }
 
@@ -44,7 +45,7 @@ public class CreatePlanScreen extends Screen {
         catch (TimeoutException e)
         {
             Assert.assertEquals(browser.currentPage(),
-                    "http://localhost:8080/tm-frontend/add-customer");
+                    "http://localhost:8080/tm-frontend/add-plan");
             String message = browser.getText(By.xpath("/html/body/div[1]/div/div/div[1]"));
             throw new exxx(message);
         }
