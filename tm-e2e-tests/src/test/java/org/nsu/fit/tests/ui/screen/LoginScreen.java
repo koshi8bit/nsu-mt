@@ -22,12 +22,12 @@ public class LoginScreen extends Screen {
     }
 
     public AdminScreen loginAsAdmin() {
+        // OK Лабораторная 4: В текущий момент в браузере еще не открылась
+        // нужная страница (AdminScreen)
         login("admin", "setup");
         browser.waitForElement(By.xpath("//button[@title = 'Add Customer']"));
 
-        // OK Лабораторная 4: В текущий момент в браузере еще не открылась
-        // нужная страница (AdminScreen), и при обращении к ее элементам, могут происходить
-        // те или иные ошибки. Подумайте как обработать эту ситуацию...
+
         return new AdminScreen(browser);
     }
 

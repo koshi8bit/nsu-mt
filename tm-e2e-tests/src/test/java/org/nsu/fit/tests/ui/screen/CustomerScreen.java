@@ -83,9 +83,6 @@ public class CustomerScreen extends Screen {
 
         pushLastDelete();
 
-        //waitAndClick("//*[@title = 'Save']"); //TODO NW
-        //waitAndClick("//*[@title = 'Delete']");
-        //waitAndClick("/html/body/div[1]/div/div/div/div/div[1]/div[2]/div/div/div/table/tbody/tr[1]/td[1]/div/button[1]");
         TimeUnit.SECONDS.sleep(2);
 
         return this;
